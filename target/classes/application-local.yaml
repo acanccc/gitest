@@ -1,0 +1,66 @@
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: webcae
+    password: Zwsoft.2022
+    url: jdbc:mysql://localhost:3306/cae?serverTimezone=GMT&useUnicode=true&characterEncoding=utf-8&useSSL=false
+  data:
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      username: webcae
+      password: Zwsoft.2022
+      database: webcae_project
+      suffix-params: authSource=admin
+      raw-database: webcae_project
+
+luban:
+  service:
+    upload:
+      base-file-path: C:\upload\
+    server:
+      domain: http://cae.zwsoft.cn     # 在登出的时候会使用, 由具体使用模块指定
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: Zwsoft.2022
+      database: 0
+    jedis:
+      maxIdle: 0
+      maxActive: 32
+      maxWait: 100
+      minIdle: 4
+    account:
+      oauth2:
+        server: https://accounts.zwsoft.cn # 账户服务器地址 (正式服务器)
+        codeUrl: /connect/authorize   # 获取授权码的url
+        tokenUrl: /connect/token      # 获取token的url
+        refreshTokenUrl: /connect/token    # 刷新token的url
+        mgPublicKeyUrl: /.well-known/openid-configuration/jwks # 获取中台公钥的地址
+        customerClient:
+          authorizationCode:
+            clientId: ZWWebCaeService  # oauth2协议中，luban服务前端所使用的client id
+            scope: email phone openid ZMS.UserDetails.Read offline_access # 权限范围
+            responseType: code  # 响应类型，固定为code，表示响应授权码
+            redirectUri: ${luban.service.server.domain}/callback # 请求授权码的回调地址
+            codeChallengeMethod: S256 # 挑战码的hash算法
+            grandType: authorization_code # oauth2的授权模式，authorization_code表示授权码模式
+        trustedClient:
+          credentials:
+            clientId: ZWCaeCoreService  # 受信客户端配置
+            clientSecret: vDgry6Z&t@U0hHuUVz!kb%A1#sT # 受信客户端密钥
+            grantType: client_credentials
+            scope: ZMS.Users.Read
+      token:
+        aceessTokenPreffix: Bearer  # access_token认证类型
+        authorizationHeaderName: Authorization  # 前端携带access_token的头部字段名称
+        accessTokenMaxAge: 7200 # access_token的存活时间(s)
+        refreshTokenMaxAge: 2592000 # refresh_token的存活时间(s)
+      cookie:
+        cookieDomain: zwsoft.cn  # 前端cookie的域名
+      api:
+        userDetailsUrl: /api/v1.0/users/details  # 获取用户详细信息的url
+        logoutUrl: /connect/endsession  # 登出的url(清除中台cookie)
+        usersInfoUrl: /api/v1.0/users/getUsersInfo # 批量获取用户详细信息的url(受信客户端接口)
+
+
