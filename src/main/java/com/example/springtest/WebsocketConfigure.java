@@ -90,7 +90,7 @@ public class WebsocketConfigure implements WebSocketMessageBrokerConfigurer {
                     accessor.setUser(principal);
                     return message;
                 }
-
+//test3
                 return message;
             }
         });
